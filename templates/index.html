@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Internet Speed Test</title>
+</head>
+<body>
+    <h1>Internet Speed Test</h1>
+    <button id="checkBtn">Check Speed</button>
+    
+    <div id="result" style="display:none;">
+        <h2>Results:</h2>
+        <p id="downloadSpeed">Download Speed: <span id="downloadValue">-</span> Mbps</p>
+        <p id="uploadSpeed">Upload Speed: <span id="uploadValue">-</span> Mbps</p>
+        <p id="ping">Ping: <span id="pingValue">-</span> ms</p>
+    </div>
+    
+    <script>
+        document.getElementById('checkBtn').addEventListener('click', async function() {
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('downloadValue').textContent = '-';
+            document.getElementById('uploadValue').textContent = '-';
+            document.getElementById('pingValue').textContent = '-';
+            
+            try {
+                const response = await fetch('/speedtest', {
+                    timeout: 10000, // Set the timeout in milliseconds (e.g., 10 seconds)
+                });
+                const data = await response.json();
+                
+                document.getElementById('downloadValue').textContent = data.download_speed.toFixed(2);
+                document.getElementById('uploadValue').textContent = data.upload_speed.toFixed(2);
+                document.getElementById('pingValue').textContent = data.ping;
+            } catch (error) {
+                console.error('Error fetching speed test data:', error);
+            }
+        });
+    </script>
+</body>
+</html>
